@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require("fs");
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -6,12 +7,21 @@ const app = express();
 // Parse the body passed to json object
 app.use(bodyParser.json());
 
-let todos = [];
 
 // Get all todos
 app.get("/todos", (req, res)=>{
 
-    res.status(200).json(todos);
+    fs.readFile("../data.txt", "UTF-8", (err, data)=>{
+        if(data)
+        {
+            res.status(200).send(JSON.parse(data));
+        }
+        else{
+            res.status(404).send();
+        }
+    })
+
+    return;
     
 });
 
@@ -22,7 +32,15 @@ app.post("/todo", (req, res)=>{
         title : req.body.title,
         description : req.body.description
     }
-    todos.push(newTodo);
+    fs.writeFile("../data.txt", JSON.stringify(newTodo), (err)=>{
+        if(err)
+        {
+            console.log(err);
+        }
+        else{
+            console.log("success");
+        }
+    });
     res.status(200).json(newTodo);
     
 });
