@@ -35,31 +35,28 @@ app.post("/todo", (req, res)=>{
     }
     
     // reading from file and storing in an arrary which is also a js object
-    let todos = fs.readFileSync("../todos.json", "UTF-8", (err)=>{
+    fs.readFile("../todos.json", "UTF-8", (err, data)=>{
         if(err)
         {
             res.status(404).send();
         }
-        else{
-            console.log("success");
-        }
+
+        // converting the string data received into json
+        let todos = JSON.parse(data);
+
+        // pushing the new todo in the json object array
+        todos.push(newTodo);
+        // writing the file again with all todos from array
+        fs.writeFile("../todos.json", JSON.stringify(todos), (err)=>{
+            if(err)
+            {
+                console.log(err);
+            }
+            else{
+                console.log("success");
+            }
+        });
     })
-
-    // converting the string data received into json
-    todos = JSON.parse(todos);
-    // pushing the new todo in the json object array
-    todos.push(newTodo);
-
-    // writing the file again with all todos from array
-    fs.writeFile("../todos.json", JSON.stringify(todos), (err)=>{
-        if(err)
-        {
-            console.log(err);
-        }
-        else{
-            console.log("success");
-        }
-    });
 
     res.status(200).json(newTodo);
     
@@ -90,16 +87,36 @@ function removeAtIndex(arr, index)
     }
     return newArray;
 }
+
 // Delete a todo with given id
 app.delete("/todo/:id", (req, res)=>{
     var id = req.params.id;
-    var todoIndex = findIndex(todos, parseInt(id));
-    if(todoIndex === -1)
-    {
-        res.send(404).send("Not found");
-    }
-    todos = removeAtIndex(todos, todoIndex);
-    res.status(200).send("found "+id);
+    fs.readFile("../todos.json", "UTF-8", (err, data)=>{
+        if(err)
+        {
+            res.status(404).send();
+        }
+        let todos = JSON.parse(data);
+        var todoIndex = findIndex(todos, parseInt(id));
+        if(todoIndex === -1)
+        {
+            res.send(404).send("Not found");
+        }
+        todos = removeAtIndex(todos, todoIndex);
+
+        // write the new updated todo
+        fs.writeFile("../todos.json", JSON.stringify(todos), (err)=>{
+            if(err)
+            {
+                console.log(err);
+            }
+            else{
+                console.log("success");
+            }
+        });
+    })
+    
+    res.status(200).send("success");
 })
 
 app.listen(3000, ()=>{
