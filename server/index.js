@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -8,17 +9,23 @@ const app = express();
 app.use(bodyParser.json());
 
 
+// doing to ignore CORS error
+app.get("/", (req, res)=>{
+    res.sendFile(path.join(__dirname, "../client/index.html"));
+});
+
+
 // Get all todos
 // all good for reading from json file
 app.get("/todos", (req, res)=>{
 
     fs.readFile("../todos.json", "UTF-8", (err, data)=>{
-        if(data)
+        if(err)
         {
-            res.json(JSON.parse(data));
+            res.status(404).send();
         }
         else{
-            res.status(404).send();
+            res.json(JSON.parse(data));
         }
     })
 
@@ -118,6 +125,10 @@ app.delete("/todo/:id", (req, res)=>{
     
     res.status(200).send("success");
 })
+
+
+
+
 
 app.listen(3000, ()=>{
     console.log("server running on port 3000!");

@@ -5,10 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do App</title>
 </head>
+
+<!-- To write js in html use script tag -->
+<script>
+    function onPress(){
+
+        fetch("http://localhost:3000/todo", {
+            method : "POST",
+            body : JSON.stringify({
+                title : "gym",
+                description : "Go to gym"
+            }),
+            headers : {
+                "Content-Type" : "application/json"     // It tells the server that the thing sent from body is json.
+            }
+        }).then(callback);
+    }
+
+    function callback(response){
+        response.json().then(parsedResponse);
+    };
+
+    function parsedResponse(data){
+        console.log(data);
+    }
+
+</script>
+
 <body>
-    title - <input type="text", name="Todo title">
-    description - <input type="text", name="Todo description">
-    <button type="button" onclick="">sendTodo</button>
+    title - <input type="text", id="title">
+    description - <input type="text", id="description">
+    <button type="button" onclick="onPress()">sendTodo</button>
     
 </body>
 </html>
