@@ -9,12 +9,13 @@ app.use(bodyParser.json());
 
 
 // Get all todos
+// all good for reading from json file
 app.get("/todos", (req, res)=>{
 
-    fs.readFile("../data.txt", "UTF-8", (err, data)=>{
+    fs.readFile("../todos.json", "UTF-8", (err, data)=>{
         if(data)
         {
-            res.status(200).send(JSON.parse(data));
+            res.json(JSON.parse(data));
         }
         else{
             res.status(404).send();
@@ -32,7 +33,25 @@ app.post("/todo", (req, res)=>{
         title : req.body.title,
         description : req.body.description
     }
-    fs.writeFile("../data.txt", JSON.stringify(newTodo), (err)=>{
+    
+    // reading from file and storing in an arrary which is also a js object
+    let todos = fs.readFileSync("../todos.json", "UTF-8", (err)=>{
+        if(err)
+        {
+            res.status(404).send();
+        }
+        else{
+            console.log("success");
+        }
+    })
+
+    // converting the string data received into json
+    todos = JSON.parse(todos);
+    // pushing the new todo in the json object array
+    todos.push(newTodo);
+
+    // writing the file again with all todos from array
+    fs.writeFile("../todos.json", JSON.stringify(todos), (err)=>{
         if(err)
         {
             console.log(err);
@@ -41,6 +60,7 @@ app.post("/todo", (req, res)=>{
             console.log("success");
         }
     });
+
     res.status(200).json(newTodo);
     
 });
