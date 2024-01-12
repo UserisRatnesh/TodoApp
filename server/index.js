@@ -10,14 +10,14 @@ app.use(bodyParser.json());
 
 
 // doing to ignore CORS error
-app.get("/", (req, res)=>{
+app.get("/", (_req, res)=>{
     res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
 
 // Get all todos
 // all good for reading from json file
-app.get("/todos", (req, res)=>{
+app.get("/todos", (_req, res)=>{
 
     fs.readFile("../todos.json", "UTF-8", (err, data)=>{
         if(err)
@@ -52,6 +52,7 @@ app.post("/todo", (req, res)=>{
         let todos = JSON.parse(data);
 
         // pushing the new todo in the json object array
+        // todo is an array object
         todos.push(newTodo);
         // writing the file again with all todos from array
         fs.writeFile("../todos.json", JSON.stringify(todos), (err)=>{
@@ -109,6 +110,8 @@ app.delete("/todo/:id", (req, res)=>{
         {
             res.send(404).send("Not found");
         }
+
+        // remove the todo with the given id by finding it's index
         todos = removeAtIndex(todos, todoIndex);
 
         // write the new updated todo
