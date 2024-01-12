@@ -8,18 +8,71 @@
 
 <!-- To write js in html use script tag -->
 <script>
+
+    function getTodos()
+    {
+        fetch("http://localhost:3000/todos",{
+            method : "GET",
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        }).then(getDataCallback);
+    }
+    function getDataCallback(response)
+    {
+        response.json().then(todoCallback);
+    }
+    function todoCallback(data)
+    {
+        console.log(data);
+
+        //DOM manipulation
+
+        // accessing the mainArea div by using ID
+        var parentElement = document.getElementById("mainArea");
+
+        // for each child create div and two spans each for title and descriptio
+        data.map(todo =>{
+            var childElement = document.createElement("div");
+            var childTitle = document.createElement("span");
+            childTitle.innerHTML = todo.title;
+            var childDescription = document.createElement("span");
+            childDescription.innerHTML = todo.description;
+
+            // adding delete button
+            var deleteButton = document.createElement("button");
+            deleteButton.innerHTML = "Delete";
+
+            // appending each child to div created
+            childElement.appendChild(childTitle);
+            childElement.appendChild(childDescription);
+            childElement.appendChild(deleteButton);
+
+            // appending the div created to parent div already present
+            parentElement.appendChild(childElement);
+        });
+
+    }
+
+    getTodos();
+
+
     function onPress(){
+        
+        var title = document.getElementById("title").value;
+        var description = document.getElementById("description").value;
 
         fetch("http://localhost:3000/todo", {
             method : "POST",
             body : JSON.stringify({
-                title : "gym",
-                description : "Go to gym"
+                title : title,
+                description : description
             }),
             headers : {
                 "Content-Type" : "application/json"     // It tells the server that the thing sent from body is json.
             }
         }).then(callback);
+
     }
 
     function callback(response){
@@ -28,6 +81,27 @@
 
     function parsedResponse(data){
         console.log(data);
+
+        // Note => we can not call getData() because it will render every todo again, So all todos will appear again.
+        // Doing all this to render the currently added to do on the frontend
+        var parentElement = document.getElementById("mainArea"); 
+        var childElement = document.createElement("div");
+        var childTitle = document.createElement("span");
+        childTitle.innerHTML = data.title;
+        var childDescription = document.createElement("span");
+        childDescription.innerHTML = data.description;
+
+        // adding delete button
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+
+        // appending each child to div created
+        childElement.appendChild(childTitle);
+        childElement.appendChild(childDescription);
+        childElement.appendChild(deleteButton);
+
+        // appending the div created to parent div already present
+        parentElement.appendChild(childElement); 
     }
 
 </script>
@@ -36,6 +110,9 @@
     title - <input type="text", id="title">
     description - <input type="text", id="description">
     <button type="button" onclick="onPress()">sendTodo</button>
-    
+    <div id="mainArea">
+        Main area
+    </div>
+
 </body>
 </html>

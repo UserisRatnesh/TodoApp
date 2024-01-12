@@ -61,7 +61,7 @@ app.post("/todo", (req, res)=>{
                 console.log(err);
             }
             else{
-                console.log("success");
+                console.log("todo added success");
             }
         });
     })
@@ -108,7 +108,7 @@ app.delete("/todo/:id", (req, res)=>{
         var todoIndex = findIndex(todos, parseInt(id));
         if(todoIndex === -1)
         {
-            res.send(404).send("Not found");
+            res.sendStatus(404).send("Not found");
         }
 
         // remove the todo with the given id by finding it's index
@@ -121,12 +121,12 @@ app.delete("/todo/:id", (req, res)=>{
                 console.log(err);
             }
             else{
-                console.log("success");
+                console.log("todo deleted success");
             }
         });
     })
     
-    res.status(200).send("success");
+    res.status(200).send("todo deleted success");
 })
 
 
