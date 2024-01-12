@@ -44,21 +44,7 @@
             deleteButton.innerHTML = "Delete";
             
             // Implementing delete function
-            deleteButton.addEventListener("click", handleEvent);
-            function handleEvent(event){
-                var todoId = todo.id;
-                fetch("http://localhost:3000/todo/"+todoId, {
-                    method : "DELETE",
-                    headers : {
-                        "Content-Type" : "application/json"
-                    }
-                }).then(deleteCallback);
-
-
-            }
-            function deleteCallback(){
-                alert("delete successfully");
-            }
+            deleteButton.setAttribute("onclick" ,"deleteTodo("+ todo.id + ")");
 
             // appending each child to div created
             childElement.appendChild(childTitle);
@@ -69,6 +55,20 @@
             parentElement.appendChild(childElement);
         });
 
+    }
+
+    function deleteTodo(id){
+        console.log(id);
+        fetch("http://localhost:3000/todo/"+id, {
+            method : "DELETE",
+            headers : {
+                "Content-Type" : "application/json"     // It tells the server that the thing sent from body is json.
+            }
+        }).then(deleteDone);
+    }
+    function deleteDone()
+    {
+        console.log("delete done");
     }
 
     getTodos();
@@ -111,24 +111,8 @@
         // adding delete button
         var deleteButton = document.createElement("button");
         deleteButton.innerHTML = "Delete";
+        deleteButton.setAttribute("onclick" ,"deleteTodo("+ data.id + ")"); 
         
-        // Implementing delete function
-        deleteButton.addEventListener("click", handleEvent);
-        function handleEvent(event){
-            var todoId = data.id;
-            fetch("http://localhost:3000/todo/"+todoId, {
-                method : "DELETE",
-                headers : {
-                    "Content-Type" : "application/json"
-                }
-            }).then(deleteCallback);
-
-
-        }
-        function deleteCallback(){
-            alert("delete successfully");
-        }
-
         // appending each child to div created
         childElement.appendChild(childTitle);
         childElement.appendChild(childDescription);
