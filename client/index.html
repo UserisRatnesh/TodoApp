@@ -42,6 +42,23 @@
             // adding delete button
             var deleteButton = document.createElement("button");
             deleteButton.innerHTML = "Delete";
+            
+            // Implementing delete function
+            deleteButton.addEventListener("click", handleEvent);
+            function handleEvent(event){
+                var todoId = todo.id;
+                fetch("http://localhost:3000/todo/"+todoId, {
+                    method : "DELETE",
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                }).then(deleteCallback);
+
+
+            }
+            function deleteCallback(){
+                alert("delete successfully");
+            }
 
             // appending each child to div created
             childElement.appendChild(childTitle);
@@ -94,6 +111,23 @@
         // adding delete button
         var deleteButton = document.createElement("button");
         deleteButton.innerHTML = "Delete";
+        
+        // Implementing delete function
+        deleteButton.addEventListener("click", handleEvent);
+        function handleEvent(event){
+            var todoId = data.id;
+            fetch("http://localhost:3000/todo/"+todoId, {
+                method : "DELETE",
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            }).then(deleteCallback);
+
+
+        }
+        function deleteCallback(){
+            alert("delete successfully");
+        }
 
         // appending each child to div created
         childElement.appendChild(childTitle);
