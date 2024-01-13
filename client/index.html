@@ -51,6 +51,9 @@
             childElement.appendChild(childDescription);
             childElement.appendChild(deleteButton);
 
+            // adding id attribute to the div
+            childElement.setAttribute("id", todo.id);
+
             // appending the div created to parent div already present
             parentElement.appendChild(childElement);
         });
@@ -65,10 +68,16 @@
                 "Content-Type" : "application/json"     // It tells the server that the thing sent from body is json.
             }
         }).then(deleteDone);
+
+        // did this to remove the deleted todo on pressing the delete button
+        var parentElement = document.getElementById("mainArea");
+        var deleteDiv = document.getElementById(id);
+        parentElement.removeChild(deleteDiv);
     }
     function deleteDone()
     {
         console.log("delete done");
+
     }
 
     getTodos();
@@ -118,6 +127,9 @@
         childElement.appendChild(childDescription);
         childElement.appendChild(deleteButton);
 
+        // adding id attribute to the div
+        childElement.setAttribute("id", data.id);
+
         // appending the div created to parent div already present
         parentElement.appendChild(childElement); 
     }
@@ -129,7 +141,7 @@
     description - <input type="text", id="description">
     <button type="button" onclick="onPress()">sendTodo</button>
     <div id="mainArea">
-        Main area
+        All todos listed below -
     </div>
 
 </body>
